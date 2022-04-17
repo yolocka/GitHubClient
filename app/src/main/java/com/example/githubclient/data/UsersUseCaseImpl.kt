@@ -11,19 +11,8 @@ class UsersUseCaseImpl(
 ) : UsersUseCase {
 
     override fun getUsers(callback: (List<UserProfile>) -> Unit) {
-        /*Thread {
-            val result = repo.getAllUsers()
-            uiHandler.post {
-                callback(result)
-            }
-        }.start()*/
         Thread {
-            val result =        listOf(
-                UserProfile("Ivan Petrov", ""),
-                UserProfile("Petr Ivanov", ""),
-                UserProfile("Alexey Maksimov", ""),
-                UserProfile("Maxim Alekseev", "")
-            )
+            val result = repo.getAllUsers()
             uiHandler.post {
                 callback(result)
             }

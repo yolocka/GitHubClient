@@ -1,4 +1,4 @@
-package com.example.githubclient.ui
+package com.example.githubclient.ui.userlist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +38,9 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
         fun bind(user: UserProfile) {
             itemView.apply {
                 findViewById<TextView>(R.id.user_item_text_view).text = user.name
+                setOnClickListener{
+                    listener?.onClick(user)
+                }
             }
         }
     }

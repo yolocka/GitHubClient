@@ -1,4 +1,4 @@
-package com.example.githubclient.ui
+package com.example.githubclient.ui.userlist
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.githubclient.domain.entities.UserProfile

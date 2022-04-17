@@ -5,7 +5,7 @@ import com.example.githubclient.data.entities.UserProfileEntity
 
 @Dao
 interface UsersDAO {
-    @Query("SELECT * FROM UserEntity ORDER BY userName")
+    @Query("SELECT * FROM UserEntity ORDER BY id")
     fun getAll(): List<UserProfileEntity>
 
     @Query("SELECT * FROM UserEntity WHERE id=:userId")

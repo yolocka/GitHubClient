@@ -1,4 +1,4 @@
-package com.example.githubclient.ui
+package com.example.githubclient.ui.userlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

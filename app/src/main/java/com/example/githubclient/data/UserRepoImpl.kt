@@ -9,6 +9,7 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
         return dao.getAll()
             .map { userEntity ->
                 UserProfile(
+                    id = userEntity.id,
                     name = userEntity.userName,
                     photo = userEntity.userPhoto
                 )
@@ -17,6 +18,7 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
 
     override fun getUser(id: Int): UserProfile {
         return UserProfile(
+            id = dao.getUser(id).id,
             name = dao.getUser(id).userName,
             photo = dao.getUser(id).userPhoto
         )

@@ -3,4 +3,7 @@
     <dimen name="user_list_item_height">40dp</dimen>
     <dimen name="user_list_item_text_size">18sp</dimen>
     <dimen name="main_padding">10dp</dimen>
+    <dimen name="profile_user_name_text_size">20sp</dimen>
+    <dimen name="profile_photo_width">100dp</dimen>
+    <dimen name="profile_photo_height">100dp</dimen>
 </resources>

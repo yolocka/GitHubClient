@@ -1,13 +1,16 @@
-package com.example.githubclient.ui
+package com.example.githubclient.ui.userlist
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubclient.app
 import com.example.githubclient.databinding.ActivityMainBinding
 import com.example.githubclient.domain.entities.UserProfile
+import com.example.githubclient.ui.AppState
+import com.example.githubclient.ui.profile.ProfileActivity
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ERR_EMPTY_DATA: String = "Не удалось загрузить данные"
+        const val ERR_UPDATE_DATA: String = "Не удалось обновить данные"
     }
 
 
@@ -34,6 +38,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.getData().observe(this) { state
             ->
             render(state)
+        }
+        val userList = listOf(
+            UserProfile(0, "Ivan Petrov", ""),
+            UserProfile(1, "Petr Ivanov", ""),
+            UserProfile(2,"Alexey Maksimov", ""),
+            UserProfile(3, "Maxim Alekseev", "")
+        )
+        userList.forEach { user ->
+            viewModel.updateData(user)
         }
         viewModel.getUsers()
     }
@@ -57,6 +70,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setOnClickListToAdapter(adapter: UserListAdapter) {
-
+        adapter.listener = UserListAdapter.OnItemClick { user ->
+            val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("USER_ID", user.id)
+            startActivity(intent)
+        }
     }
 }
