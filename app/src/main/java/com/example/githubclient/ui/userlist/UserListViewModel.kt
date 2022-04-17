@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.domain.entities.UserProfile
+import com.example.githubclient.domain.entities.RepoDTO
+import com.example.githubclient.domain.entities.UserDTO
 import com.example.githubclient.ui.AppState
 
 class UserListViewModel(
@@ -25,13 +26,21 @@ class UserListViewModel(
             } }
     }
 
-    override fun updateData(userProfile: UserProfile) {
+    override fun updateData(userProfile: UserDTO) {
         liveDataToObserve.value = AppState.Loading
-        usersUseCase.addUser(userProfile){ result ->
-            if (result) {
-                liveDataToObserve.postValue(AppState.Success(result))
-            } else {
+        usersUseCase.addUser(userProfile) { result ->
+            if (!result) {
                 liveDataToObserve.value = AppState.Error(MainActivity.ERR_UPDATE_DATA)
-            } }
+            }
+        }
+    }
+
+    override fun updateRepo(repository: RepoDTO) {
+        liveDataToObserve.value = AppState.Loading
+        usersUseCase.addRepo(repository){ result ->
+            if (!result) {
+                liveDataToObserve.value = AppState.Error(MainActivity.ERR_UPDATE_DATA)
+            }
+        }
     }
 }

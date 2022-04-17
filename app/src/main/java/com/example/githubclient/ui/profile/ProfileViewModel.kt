@@ -18,6 +18,16 @@ class ProfileViewModel(
         liveDataToObserve.value = AppState.Loading
         usersUseCase.getOneUser(id) { result ->
             liveDataToObserve.postValue(AppState.Success(result))
+            getRepoList(id)
         }
+    }
+
+    override fun getRepoList(id: Int) {
+        usersUseCase.getRepositories(id) { result ->
+            if (result.isNotEmpty()) {
+                liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
+            } else {
+                liveDataToObserve.value = AppState.Error(ProfileActivity.ERR_EMPTY_DATA)
+            } }
     }
 }

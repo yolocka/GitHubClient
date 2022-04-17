@@ -5,12 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "RepositoriesEntity", foreignKeys = [
-    ForeignKey(entity = UserProfileEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["userId"],
-        onDelete = CASCADE)]
-)
+@Entity(tableName = "RepositoriesEntity")
 data class RepositoriesEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
