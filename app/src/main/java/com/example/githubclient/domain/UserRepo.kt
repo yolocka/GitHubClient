@@ -5,9 +5,11 @@ import com.example.githubclient.domain.entities.UserDTO
 
 interface UserRepo {
 
+   // fun getAllUsers(): List<OwnerDTO>
+
     fun getAllUsers(): List<UserDTO>
 
-    fun getUser(id: Int): UserDTO
+    fun getUser(id: Long): UserDTO
 
     fun saveUser(user: UserDTO) : Boolean
 
@@ -17,7 +19,7 @@ interface UserRepo {
 
     fun deleteAllUsers()
 
-    fun getRepositoriesList(id: Int): List<RepoDTO>
+    fun getRepositoriesList(id: Long): List<RepoDTO>
 
     fun addRepo(repo: RepoDTO) : Boolean
 }

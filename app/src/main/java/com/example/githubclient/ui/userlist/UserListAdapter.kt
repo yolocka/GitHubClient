@@ -37,7 +37,7 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(user: UserDTO) {
             itemView.apply {
-                findViewById<TextView>(R.id.user_item_text_view).text = user.name
+                findViewById<TextView>(R.id.user_item_text_view).text = user.login
                 setOnClickListener{
                     listener?.onClick(user)
                 }

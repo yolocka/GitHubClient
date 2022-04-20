@@ -8,6 +8,6 @@ class UserListContract {
     interface ViewModel {
         fun getUsers()
         fun updateData(userProfile: UserDTO)
-        fun updateRepo(repository: RepoDTO)
+        fun getUsersFromRemoteSource(isItFirstTime: Boolean)
     }
 }

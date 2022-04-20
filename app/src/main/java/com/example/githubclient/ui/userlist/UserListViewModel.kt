@@ -7,12 +7,16 @@ import com.example.githubclient.domain.UsersUseCase
 import com.example.githubclient.domain.entities.RepoDTO
 import com.example.githubclient.domain.entities.UserDTO
 import com.example.githubclient.ui.AppState
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class UserListViewModel(
     private val usersUseCase: UsersUseCase
 ) : ViewModel(), UserListContract.ViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun getData(): LiveData<AppState> = liveDataToObserve
 
@@ -35,12 +39,25 @@ class UserListViewModel(
         }
     }
 
-    override fun updateRepo(repository: RepoDTO) {
+    override fun getUsersFromRemoteSource(isItFirstTime: Boolean) {
         liveDataToObserve.value = AppState.Loading
-        usersUseCase.addRepo(repository){ result ->
-            if (!result) {
-                liveDataToObserve.value = AppState.Error(MainActivity.ERR_UPDATE_DATA)
-            }
-        }
+        compositeDisposable.add(
+            usersUseCase
+                .getUsersFromRemoteSource()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    it.forEach { user ->
+                        updateData(user)
+                    }
+                    if (isItFirstTime) {
+                        liveDataToObserve.postValue(AppState.Success(it))
+                    }
+                }
+        )
+    }
+
+    override fun onCleared() {
+        compositeDisposable.clear()
+        super.onCleared()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.githubclient.data
+package com.example.githubclient.data.localRepo
 
 import androidx.room.*
 import com.example.githubclient.data.entities.RepositoriesEntity
@@ -10,12 +10,12 @@ interface UsersDAO {
     fun getAllUsers(): List<UserProfileEntity>
 
     @Query("SELECT * FROM RepositoriesEntity WHERE userId=:userId")
-    fun getAllRepositories(userId: Int): List<RepositoriesEntity>
+    fun getAllRepositories(userId: Long): List<RepositoriesEntity>
 
-    @Query("SELECT * FROM UserEntity WHERE id=:userId")
-    fun getUser(userId: Int): UserProfileEntity
+    @Query("SELECT * FROM UserEntity WHERE gitHubId=:userId")
+    fun getUser(userId: Long): UserProfileEntity
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(entity: UserProfileEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
