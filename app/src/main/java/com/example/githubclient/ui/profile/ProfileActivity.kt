@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.githubclient.app
 import com.example.githubclient.databinding.ActivityProfileBinding
-import com.example.githubclient.domain.entities.RepoDTO
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.entities.UserDto
 import com.example.githubclient.ui.AppState
 
 class ProfileActivity : AppCompatActivity() {
@@ -46,13 +46,13 @@ class ProfileActivity : AppCompatActivity() {
         when (state) {
             is AppState.Success<*> -> {
                 //hideProgress()
-                val user: UserDTO = state.data as UserDTO
+                val user: UserDto = state.data as UserDto
                 binding.userNameTextView.text = user.login
                 binding.userPhotoImageView.load(user.avatar_url)
                 viewModel.observeUsersRepo(user.login)
             }
             is AppState.AdditionalDataSuccess<*> -> {
-                val repositories: List<RepoDTO> = state.data as List<RepoDTO>
+                val repositories: List<RepoDto> = state.data as List<RepoDto>
                 repoListAdapter.setRepositories(repositories)
             }
             is AppState.Error -> {

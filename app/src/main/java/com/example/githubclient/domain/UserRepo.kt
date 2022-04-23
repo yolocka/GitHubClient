@@ -1,17 +1,17 @@
 package com.example.githubclient.domain
 
-import com.example.githubclient.domain.entities.RepoDTO
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.entities.UserDto
 
 interface UserRepo {
 
    // fun getAllUsers(): List<OwnerDTO>
 
-    fun getAllUsers(): List<UserDTO>
+    fun getAllUsers(): List<UserDto>
 
-    fun getUser(id: Long): UserDTO
+    fun getUser(id: Long): UserDto
 
-    fun saveUser(user: UserDTO) : Boolean
+    fun saveUser(user: UserDto) : Boolean
 
 /*    fun updateUserData(id: Int, user: UserProfile)*/
 
@@ -19,7 +19,7 @@ interface UserRepo {
 
     fun deleteAllUsers()
 
-    fun getRepositoriesList(id: Long): List<RepoDTO>
+    fun getRepositoriesList(id: Long): List<RepoDto>
 
-    fun addRepo(repo: RepoDTO) : Boolean
+    fun addRepo(repo: RepoDto) : Boolean
 }

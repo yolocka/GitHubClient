@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.domain.entities.RepoDTO
+import com.example.githubclient.data.entities.RepoDto
 import com.example.githubclient.ui.AppState
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -50,7 +50,7 @@ class ProfileViewModel(
         )
     }
 
-    override fun addRepoToLocalRepo(repo: RepoDTO) {
+    override fun addRepoToLocalRepo(repo: RepoDto) {
         TODO("Not yet implemented")
     }
 

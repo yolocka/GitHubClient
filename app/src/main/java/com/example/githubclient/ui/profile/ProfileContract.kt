@@ -1,6 +1,6 @@
 package com.example.githubclient.ui.profile
 
-import com.example.githubclient.domain.entities.RepoDTO
+import com.example.githubclient.data.entities.RepoDto
 
 
 class ProfileContract {
@@ -8,6 +8,6 @@ class ProfileContract {
         fun getUserData(id: Long)
         fun getRepoList(id: Long)
         fun observeUsersRepo(login: String)
-        fun addRepoToLocalRepo(repo: RepoDTO)
+        fun addRepoToLocalRepo(repo: RepoDto)
     }
 }

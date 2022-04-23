@@ -7,14 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubclient.R
-import com.example.githubclient.domain.entities.RepoDTO
+import com.example.githubclient.data.entities.RepoDto
 
 class RepoListAdapter() : RecyclerView.Adapter<RepoListAdapter.MainViewHolder>() {
 
-    private var repositories: List<RepoDTO> = listOf()
+    private var repositories: List<RepoDto> = listOf()
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(repo: RepoDTO) {
+        fun bind(repo: RepoDto) {
             itemView.apply {
                 findViewById<TextView>(R.id.repo_item_text_view).text = repo.name
             }
@@ -33,7 +33,7 @@ class RepoListAdapter() : RecyclerView.Adapter<RepoListAdapter.MainViewHolder>()
 
     override fun getItemCount(): Int = repositories.size
 
-    fun setRepositories(data: List<RepoDTO>) {
+    fun setRepositories(data: List<RepoDto>) {
         val mainDiffUtilCallback = RepoDiffUtilCallback(repositories, data)
         val productDiffResult = DiffUtil.calculateDiff(mainDiffUtilCallback)
         repositories = data

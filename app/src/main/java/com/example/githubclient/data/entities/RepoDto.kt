@@ -1,6 +1,6 @@
-package com.example.githubclient.domain.entities
+package com.example.githubclient.data.entities
 
-data class RepoDTO(
+data class RepoDto(
     val id: Int = 0,
     val name: String = "",
     val userId: Long = 0

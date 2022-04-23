@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubclient.app
 import com.example.githubclient.databinding.ActivityMainBinding
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.UserDto
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.ui.profile.ProfileActivity
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         when (state) {
             is AppState.Success<*> -> {
                 //hideProgress()
-                val users: List<UserDTO> = state.data as List<UserDTO>
+                val users: List<UserDto> = state.data as List<UserDto>
                 userListAdapter.setUsers(users)
             }
             is AppState.Error -> {

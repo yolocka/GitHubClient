@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.domain.entities.RepoDTO
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.UserDto
 import com.example.githubclient.ui.AppState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -30,7 +29,7 @@ class UserListViewModel(
             } }
     }
 
-    override fun updateData(userProfile: UserDTO) {
+    override fun updateData(userProfile: UserDto) {
         liveDataToObserve.value = AppState.Loading
         usersUseCase.addUser(userProfile) { result ->
             if (!result) {
