@@ -1,8 +1,8 @@
 package com.example.githubclient.data.db
 
 import androidx.room.*
-import com.example.githubclient.data.entities.RepositoriesEntity
-import com.example.githubclient.data.entities.UserProfileEntity
+import com.example.githubclient.data.db.entities.RepositoriesEntity
+import com.example.githubclient.data.db.entities.UserProfileEntity
 
 @Dao
 interface UsersDAO {

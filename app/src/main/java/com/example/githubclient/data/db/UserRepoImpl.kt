@@ -1,7 +1,7 @@
 package com.example.githubclient.data.db
 
-import com.example.githubclient.data.entities.RepositoriesEntity
-import com.example.githubclient.data.entities.UserProfileEntity
+import com.example.githubclient.data.db.entities.RepositoriesEntity
+import com.example.githubclient.data.db.entities.UserProfileEntity
 import com.example.githubclient.domain.UserRepo
 import com.example.githubclient.data.entities.RepoEntity
 import com.example.githubclient.data.entities.UserEntity

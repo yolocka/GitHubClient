@@ -1,12 +1,12 @@
 package com.example.githubclient.data
 
 import android.os.Handler
-import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.web.entities.RepoDto
 import com.example.githubclient.domain.UserRemoteRepo
 import com.example.githubclient.domain.UserRepo
 import com.example.githubclient.domain.UsersUseCase
 import com.example.githubclient.data.entities.RepoEntity
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.web.entities.UserDto
 import com.example.githubclient.data.entities.UserEntity
 import io.reactivex.rxjava3.core.Single
 

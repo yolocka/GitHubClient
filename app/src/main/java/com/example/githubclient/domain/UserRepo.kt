@@ -5,8 +5,6 @@ import com.example.githubclient.data.entities.UserEntity
 
 interface UserRepo {
 
-   // fun getAllUsers(): List<OwnerDTO>
-
     fun getAllUsers(): List<UserEntity>
 
     fun getUser(id: Long): UserEntity
