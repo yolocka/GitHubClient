@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.example.githubclient.app
 import com.example.githubclient.databinding.ActivityProfileBinding
 import com.example.githubclient.domain.entities.RepoDTO
@@ -27,7 +28,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.repoListRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         binding.repoListRecyclerView.adapter = repoListAdapter
-        var userId = intent.getIntExtra("USER_ID", 0)
+        var userId = intent.getLongExtra("USER_ID", 0)
         viewModel = ViewModelProvider(
             this,
             ProfileViewModelFactory (app.usersUseCase)
@@ -46,7 +47,9 @@ class ProfileActivity : AppCompatActivity() {
             is AppState.Success<*> -> {
                 //hideProgress()
                 val user: UserDTO = state.data as UserDTO
-                binding.userNameTextView.text = user.name
+                binding.userNameTextView.text = user.login
+                binding.userPhotoImageView.load(user.avatar_url)
+                viewModel.observeUsersRepo(user.login)
             }
             is AppState.AdditionalDataSuccess<*> -> {
                 val repositories: List<RepoDTO> = state.data as List<RepoDTO>

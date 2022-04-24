@@ -1,4 +1,4 @@
-package com.example.githubclient.data
+package com.example.githubclient.data.localRepo
 
 import com.example.githubclient.data.entities.RepositoriesEntity
 import com.example.githubclient.data.entities.UserProfileEntity
@@ -11,18 +11,18 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
         return dao.getAllUsers()
             .map { userEntity ->
                 UserDTO(
-                    id = userEntity.id,
-                    name = userEntity.userName,
-                    photo = userEntity.userPhoto
+                    id = userEntity.gitHubId,
+                    login = userEntity.userName,
+                    avatar_url = userEntity.userPhoto
                 )
             }
     }
 
-    override fun getUser(id: Int): UserDTO {
+    override fun getUser(id: Long): UserDTO {
         return UserDTO(
-            id = dao.getUser(id).id,
-            name = dao.getUser(id).userName,
-            photo = dao.getUser(id).userPhoto
+            id = dao.getUser(id).gitHubId,
+            login = dao.getUser(id).userName,
+            avatar_url = dao.getUser(id).userPhoto
         )
     }
 
@@ -30,8 +30,9 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
         dao.insertUser(
             UserProfileEntity(
                 id = 0,
-                userName = user.name,
-                userPhoto = user.photo
+                gitHubId = user.id,
+                userName = user.login,
+                userPhoto = user.avatar_url
             )
         )
         return true
@@ -49,7 +50,7 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
         dao.deleteAll()
     }
 
-    override fun getRepositoriesList(id: Int): List<RepoDTO> {
+    override fun getRepositoriesList(id: Long): List<RepoDTO> {
         return dao.getAllRepositories(id)
             .map { repoEntity ->
                 RepoDTO(

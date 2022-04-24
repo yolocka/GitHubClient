@@ -1,4 +1,4 @@
-package com.example.githubclient.data
+package com.example.githubclient.data.localRepo
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

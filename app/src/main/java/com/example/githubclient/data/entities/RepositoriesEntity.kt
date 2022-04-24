@@ -10,5 +10,5 @@ data class RepositoriesEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
-    val userId: Int
+    val userId: Long
     )

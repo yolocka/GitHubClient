@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubclient.app
 import com.example.githubclient.databinding.ActivityMainBinding
-import com.example.githubclient.domain.entities.RepoDTO
 import com.example.githubclient.domain.entities.UserDTO
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.ui.profile.ProfileActivity
@@ -55,9 +54,9 @@ class MainActivity : AppCompatActivity() {
                 editor.putBoolean(IS_REPO_EMPTY, false)
                 editor.apply()
             }
-            putDataToRepo()
-            recreate()
+            viewModel.getUsersFromRemoteSource(true)
         } else {
+            viewModel.getUsersFromRemoteSource(false)
             viewModel.getUsers()
         }
     }
@@ -80,29 +79,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun putDataToRepo() {
-        val userList = listOf(
-            UserDTO(0, "Ivan Petrov", ""),
-            UserDTO(1, "Petr Ivanov", ""),
-            UserDTO(2,"Alexey Maksimov", ""),
-            UserDTO(3, "Maxim Alekseev", "")
-        )
-        userList.forEach { user ->
-            viewModel.updateData(user)
-        }
-        val repoList = listOf(
-            RepoDTO(0, "Repository 1", 1),
-            RepoDTO(1, "Repository 2", 1),
-            RepoDTO(2,"Repository 3", 4),
-            RepoDTO(3, "Repository 4", 3),
-            RepoDTO(3, "Repository 5", 2),
-            RepoDTO(3, "Repository 6", 2)
-        )
-        repoList.forEach {
-            viewModel.updateRepo(it)
-        }
-    }
-
     private fun setOnClickListToAdapter(adapter: UserListAdapter) {
         adapter.listener = UserListAdapter.OnItemClick { user ->
             val intent = Intent(this, ProfileActivity::class.java)
@@ -110,4 +86,5 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 }

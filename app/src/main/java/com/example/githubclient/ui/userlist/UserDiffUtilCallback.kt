@@ -21,7 +21,7 @@ class UserDiffUtilCallback(private val oldList: List<UserDTO>, private val newLi
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldUser: UserDTO = oldList[oldItemPosition]
         val newUser: UserDTO = newList[newItemPosition]
-        return (oldUser.name == newUser.name
-                && oldUser.photo == newUser.photo)
+        return (oldUser.login == newUser.login
+                && oldUser.avatar_url == newUser.avatar_url)
     }
 }
