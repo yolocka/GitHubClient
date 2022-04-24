@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
 import com.example.githubclient.data.entities.RepoDto
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.ui.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
@@ -31,7 +32,7 @@ class ProfileViewModel(
             if (result.isNotEmpty()) {
                 liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
             } else {
-                liveDataToObserve.value = AppState.Error(ProfileActivity.ERR_EMPTY_DATA)
+                liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
             } }
     }
 
@@ -44,7 +45,7 @@ class ProfileViewModel(
                     if (it.isNotEmpty()) {
                         liveDataToObserve.postValue(AppState.AdditionalDataSuccess(it))
                     } else {
-                        liveDataToObserve.value = AppState.Error(ProfileActivity.ERR_EMPTY_DATA)
+                        liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
                     }
                 }
         )

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.example.githubclient.data.db.UserRepoImpl
 import com.example.githubclient.data.db.UsersDAO
@@ -32,3 +33,7 @@ class App : Application() {
 
 val Context.app: App
     get() = applicationContext as App
+
+
+val Fragment.app: App
+    get() = requireActivity().app

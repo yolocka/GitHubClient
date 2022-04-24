@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubclient.R
 import com.example.githubclient.data.entities.UserDto
 
-class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>(){
+class UserListAdapter(
+    private val itemClickCallback: (UserDto) -> Unit
+) : RecyclerView.Adapter<UserListAdapter.MainViewHolder>(){
 
     private var users: List<UserDto> = listOf()
-    var listener: OnItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return MainViewHolder(
@@ -21,7 +22,7 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.bind(users[position])
+        holder.bind(users[position], itemClickCallback)
     }
 
     override fun getItemCount(): Int = users.size
@@ -35,17 +36,14 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
 
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: UserDto) {
+        fun bind(user: UserDto, listener: (UserDto) -> Unit) {
             itemView.apply {
                 findViewById<TextView>(R.id.user_item_text_view).text = user.login
                 setOnClickListener{
-                    listener?.onClick(user)
+                    //listener?.onClick(user)
+                    listener.invoke(user)
                 }
             }
         }
-    }
-
-    fun interface OnItemClick {
-        fun onClick(user: UserDto)
     }
 }

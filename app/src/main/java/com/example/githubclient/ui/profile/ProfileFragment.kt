@@ -1,42 +1,61 @@
 package com.example.githubclient.ui.profile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
+import com.example.githubclient.R
 import com.example.githubclient.app
-import com.example.githubclient.databinding.ActivityProfileBinding
 import com.example.githubclient.data.entities.RepoDto
 import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.databinding.FragmentProfileBinding
+import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
 
-class ProfileActivity : AppCompatActivity() {
-    private val binding: ActivityProfileBinding by lazy {
-        ActivityProfileBinding.inflate(layoutInflater)
-    }
+
+class ProfileFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentProfileBinding::class.java)
     private val repoListAdapter = RepoListAdapter()
     private lateinit var viewModel: ProfileViewModel
 
-    companion object {
-        const val ERR_EMPTY_DATA: String = "Не удалось загрузить данные"
+    companion object{
+        private const val USER_ID_ARGS_KEY = "USER_ID_ARGS_KEY"
+        fun newInstance(userId: Long) = ProfileFragment().apply {
+            arguments = Bundle()
+            arguments?.putLong(USER_ID_ARGS_KEY, userId)
+        }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        binding.repoListRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
-        binding.repoListRecyclerView.adapter = repoListAdapter
-        var userId = intent.getLongExtra("USER_ID", 0)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_profile, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.repoListRecyclerView.apply{
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
+            adapter = repoListAdapter
+        }
         viewModel = ViewModelProvider(
             this,
             ProfileViewModelFactory (app.usersUseCase)
         ).get(ProfileViewModel::class.java)
-        viewModel.getData().observe(this) { state
+        viewModel.getData().observe(requireActivity()) { state
             ->
             render(state)
         }
+        val userId = getUserIdFromArguments()
         userId.let {
             viewModel.getUserData(it)
         }
@@ -64,5 +83,10 @@ class ProfileActivity : AppCompatActivity() {
             }
             else -> {}
         }
+    }
+
+    private fun getUserIdFromArguments(): Long {
+        return arguments?.getLong(USER_ID_ARGS_KEY)
+            ?: throw IllegalStateException("В аргументы не добавлен id пользователя")
     }
 }

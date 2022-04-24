@@ -3,6 +3,7 @@ package com.example.githubclient.ui.userlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.domain.UsersUseCase
 import com.example.githubclient.data.entities.UserDto
 import com.example.githubclient.ui.AppState
