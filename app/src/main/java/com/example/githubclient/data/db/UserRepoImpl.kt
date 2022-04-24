@@ -3,14 +3,14 @@ package com.example.githubclient.data.db
 import com.example.githubclient.data.entities.RepositoriesEntity
 import com.example.githubclient.data.entities.UserProfileEntity
 import com.example.githubclient.domain.UserRepo
-import com.example.githubclient.data.entities.RepoDto
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.data.entities.UserEntity
 
 class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
-    override fun getAllUsers(): List<UserDto> {
+    override fun getAllUsers(): List<UserEntity> {
         return dao.getAllUsers()
             .map { userEntity ->
-                UserDto(
+                UserEntity(
                     id = userEntity.gitHubId,
                     login = userEntity.userName,
                     avatar_url = userEntity.userPhoto
@@ -18,15 +18,15 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
             }
     }
 
-    override fun getUser(id: Long): UserDto {
-        return UserDto(
+    override fun getUser(id: Long): UserEntity {
+        return UserEntity(
             id = dao.getUser(id).gitHubId,
             login = dao.getUser(id).userName,
             avatar_url = dao.getUser(id).userPhoto
         )
     }
 
-    override fun saveUser(user: UserDto) : Boolean {
+    override fun saveUser(user: UserEntity) : Boolean {
         dao.insertUser(
             UserProfileEntity(
                 id = 0,
@@ -50,10 +50,10 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
         dao.deleteAll()
     }
 
-    override fun getRepositoriesList(id: Long): List<RepoDto> {
+    override fun getRepositoriesList(id: Long): List<RepoEntity> {
         return dao.getAllRepositories(id)
             .map { repoEntity ->
-                RepoDto(
+                RepoEntity(
                     id = repoEntity.id,
                     name = repoEntity.name,
                     userId = repoEntity.userId
@@ -61,7 +61,7 @@ class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
             }
     }
 
-    override fun addRepo(repo: RepoDto): Boolean {
+    override fun addRepo(repo: RepoEntity): Boolean {
         dao.insertRepo(
             RepositoriesEntity(
                 id = 0,

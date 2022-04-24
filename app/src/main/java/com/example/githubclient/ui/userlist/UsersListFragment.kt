@@ -14,7 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.githubclient.R
 import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.app
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
 
@@ -77,7 +77,7 @@ class UsersListFragment : Fragment() {
         when (state) {
             is AppState.Success<*> -> {
                 //hideProgress()
-                val users: List<UserDto> = state.data as List<UserDto>
+                val users: List<UserEntity> = state.data as List<UserEntity>
                 userListAdapter.setUsers(users)
             }
             is AppState.Error -> {
@@ -92,6 +92,6 @@ class UsersListFragment : Fragment() {
     }
 
     interface Controller {
-        fun openUserProfileScreen(user: UserDto)
+        fun openUserProfileScreen(user: UserEntity)
     }
 }

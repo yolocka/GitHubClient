@@ -12,10 +12,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.example.githubclient.R
 import com.example.githubclient.app
-import com.example.githubclient.data.entities.RepoDto
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.databinding.FragmentProfileBinding
-import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
 
 
@@ -65,13 +64,13 @@ class ProfileFragment : Fragment() {
         when (state) {
             is AppState.Success<*> -> {
                 //hideProgress()
-                val user: UserDto = state.data as UserDto
+                val user: UserEntity = state.data as UserEntity
                 binding.userNameTextView.text = user.login
                 binding.userPhotoImageView.load(user.avatar_url)
                 viewModel.observeUsersRepo(user.login)
             }
             is AppState.AdditionalDataSuccess<*> -> {
-                val repositories: List<RepoDto> = state.data as List<RepoDto>
+                val repositories: List<RepoEntity> = state.data as List<RepoEntity>
                 repoListAdapter.setRepositories(repositories)
             }
             is AppState.Error -> {

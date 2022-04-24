@@ -1,8 +1,8 @@
 package com.example.githubclient.data.web
 
-import com.example.githubclient.domain.UserRemoteRepo
-import com.example.githubclient.data.entities.UserDto
 import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.domain.UserRemoteRepo
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory

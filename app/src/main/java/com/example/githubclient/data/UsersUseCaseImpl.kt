@@ -1,11 +1,13 @@
 package com.example.githubclient.data
 
 import android.os.Handler
+import com.example.githubclient.data.entities.RepoDto
 import com.example.githubclient.domain.UserRemoteRepo
 import com.example.githubclient.domain.UserRepo
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.entities.RepoEntity
 import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.UserEntity
 import io.reactivex.rxjava3.core.Single
 
 class UsersUseCaseImpl(
@@ -14,7 +16,7 @@ class UsersUseCaseImpl(
     private val remoteRepo: UserRemoteRepo
 ) : UsersUseCase {
 
-    override fun getUsers(callback: (List<UserDto>) -> Unit) {
+    override fun getUsers(callback: (List<UserEntity>) -> Unit) {
         Thread {
             val result = repo.getAllUsers()
             uiHandler.post {
@@ -23,7 +25,7 @@ class UsersUseCaseImpl(
         }.start()
     }
 
-    override fun getOneUser(id: Long, callback: (UserDto) -> Unit) {
+    override fun getOneUser(id: Long, callback: (UserEntity) -> Unit) {
         Thread {
             val result = repo.getUser(id)
             uiHandler.post {
@@ -32,7 +34,7 @@ class UsersUseCaseImpl(
         }.start()
     }
 
-    override fun addUser(user: UserDto, callback: (Boolean) -> Unit) {
+    override fun addUser(user: UserEntity, callback: (Boolean) -> Unit) {
         Thread {
             val result = repo.saveUser(user)
             uiHandler.post {
@@ -41,7 +43,7 @@ class UsersUseCaseImpl(
         }.start()
     }
 
-    override fun getRepositories(id: Long, callback: (List<RepoDto>) -> Unit) {
+    override fun getRepositories(id: Long, callback: (List<RepoEntity>) -> Unit) {
         Thread {
             val result = repo.getRepositoriesList(id)
             uiHandler.post {
@@ -50,7 +52,7 @@ class UsersUseCaseImpl(
         }.start()
     }
 
-    override fun addRepo(repository: RepoDto, callback: (Boolean) -> Unit) {
+    override fun addRepo(repository: RepoEntity, callback: (Boolean) -> Unit) {
         Thread {
             val result = repo.addRepo(repository)
             uiHandler.post {

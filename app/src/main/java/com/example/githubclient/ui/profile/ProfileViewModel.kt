@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.RepoDto
+import com.example.githubclient.data.entities.RepoEntity
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.ui.MainActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -43,7 +43,15 @@ class ProfileViewModel(
                 .observeUsersRepos(login)
                 .subscribeBy {
                     if (it.isNotEmpty()) {
-                        liveDataToObserve.postValue(AppState.AdditionalDataSuccess(it))
+                        liveDataToObserve.postValue(AppState.AdditionalDataSuccess(
+                            it.map { repoDto ->
+                                RepoEntity (
+                                    id = repoDto.id,
+                                    name = repoDto.name,
+                                    userId = repoDto.userId
+                                )
+                            }
+                        ))
                     } else {
                         liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
                     }
@@ -51,7 +59,7 @@ class ProfileViewModel(
         )
     }
 
-    override fun addRepoToLocalRepo(repo: RepoDto) {
+    override fun addRepoToLocalRepo(repo: RepoEntity) {
         TODO("Not yet implemented")
     }
 

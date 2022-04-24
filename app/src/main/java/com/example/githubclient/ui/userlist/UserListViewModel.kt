@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.ui.AppState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -30,7 +30,7 @@ class UserListViewModel(
             } }
     }
 
-    override fun updateData(userProfile: UserDto) {
+    override fun updateData(userProfile: UserEntity) {
         liveDataToObserve.value = AppState.Loading
         usersUseCase.addUser(userProfile) { result ->
             if (!result) {
@@ -47,7 +47,13 @@ class UserListViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     it.forEach { user ->
-                        updateData(user)
+                        updateData(
+                            UserEntity(
+                                id = user.id,
+                                login = user.login,
+                                avatar_url = user.avatar_url
+                            )
+                        )
                     }
                     if (isItFirstTime) {
                         liveDataToObserve.postValue(AppState.Success(it))

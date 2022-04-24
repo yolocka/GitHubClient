@@ -7,13 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubclient.R
-import com.example.githubclient.data.entities.UserDto
+import com.example.githubclient.data.entities.UserEntity
 
 class UserListAdapter(
-    private val itemClickCallback: (UserDto) -> Unit
+    private val itemClickCallback: (UserEntity) -> Unit
 ) : RecyclerView.Adapter<UserListAdapter.MainViewHolder>(){
 
-    private var users: List<UserDto> = listOf()
+    private var users: List<UserEntity> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return MainViewHolder(
@@ -27,7 +27,7 @@ class UserListAdapter(
 
     override fun getItemCount(): Int = users.size
 
-    fun setUsers(data: List<UserDto>) {
+    fun setUsers(data: List<UserEntity>) {
         val mainDiffUtilCallback = UserDiffUtilCallback(users, data)
         val productDiffResult = DiffUtil.calculateDiff(mainDiffUtilCallback)
         users = data
@@ -36,7 +36,7 @@ class UserListAdapter(
 
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: UserDto, listener: (UserDto) -> Unit) {
+        fun bind(user: UserEntity, listener: (UserEntity) -> Unit) {
             itemView.apply {
                 findViewById<TextView>(R.id.user_item_text_view).text = user.login
                 setOnClickListener{
