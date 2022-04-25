@@ -5,9 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.githubclient.domain.UsersUseCase
 
 class UserListViewModelFactory (
-    private val usersUseCase: UsersUseCase
+    private val usersUseCase: UsersUseCase,
+    val id: String
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T: ViewModel> create(modelClass:Class<T>): T {
-        return UserListViewModel(usersUseCase) as T
+        return UserListViewModel(usersUseCase, id) as T
     }
 }

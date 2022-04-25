@@ -16,6 +16,10 @@ import com.example.githubclient.data.entities.RepoEntity
 import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.databinding.FragmentProfileBinding
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.ui.userlist.UserListViewModel
+import com.example.githubclient.ui.userlist.UserListViewModelFactory
+import com.example.githubclient.ui.userlist.UsersListFragment
+import java.util.*
 
 
 class ProfileFragment : Fragment() {
@@ -26,6 +30,7 @@ class ProfileFragment : Fragment() {
 
     companion object{
         private const val USER_ID_ARGS_KEY = "USER_ID_ARGS_KEY"
+        const val PROFILE_VIEW_MODEL_ID: String = "profile_view_model_id"
         fun newInstance(userId: Long) = ProfileFragment().apply {
             arguments = Bundle()
             arguments?.putLong(USER_ID_ARGS_KEY, userId)
@@ -41,15 +46,25 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (savedInstanceState != null) {
+            val id = savedInstanceState.getString(PROFILE_VIEW_MODEL_ID)!!
+            viewModel = app.viewModelStore.getViewModel(id) as ProfileViewModel
+        } else {
+            val id = UUID.randomUUID().toString()
+            viewModel = ViewModelProvider(
+                this,
+                ProfileViewModelFactory (app.usersUseCase, id)
+            ).get(ProfileViewModel::class.java)
+            app.viewModelStore.saveViewModel(viewModel)
+        }
+
         binding.repoListRecyclerView.apply{
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             adapter = repoListAdapter
         }
-        viewModel = ViewModelProvider(
-            this,
-            ProfileViewModelFactory (app.usersUseCase)
-        ).get(ProfileViewModel::class.java)
+
         viewModel.getData().observe(requireActivity()) { state
             ->
             render(state)
@@ -58,6 +73,11 @@ class ProfileFragment : Fragment() {
         userId.let {
             viewModel.getUserData(it)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(PROFILE_VIEW_MODEL_ID, viewModel.id)
     }
 
     private fun render(state: AppState?) {

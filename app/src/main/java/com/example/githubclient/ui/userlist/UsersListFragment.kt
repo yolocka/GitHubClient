@@ -17,6 +17,7 @@ import com.example.githubclient.app
 import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
+import java.util.*
 
 class UsersListFragment : Fragment() {
 
@@ -31,6 +32,10 @@ class UsersListFragment : Fragment() {
         sharedPref.edit()
     }
 
+    companion object {
+        const val USERS_LIST_VIEW_MODEL_ID: String = "users_list_view_model_id"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,16 +47,24 @@ class UsersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (savedInstanceState != null) {
+            val id = savedInstanceState.getString(USERS_LIST_VIEW_MODEL_ID)!!
+            viewModel = app.viewModelStore.getViewModel(id) as UserListViewModel
+        } else {
+            val id = UUID.randomUUID().toString()
+            viewModel = ViewModelProvider(
+                this,
+                UserListViewModelFactory (app.usersUseCase, id)
+            ).get(UserListViewModel::class.java)
+            app.viewModelStore.saveViewModel(viewModel)
+        }
+
         binding.usersListRecyclerView.apply {
             addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             layoutManager = LinearLayoutManager(requireContext())
             adapter = userListAdapter
         }
 
-        viewModel = ViewModelProvider(
-            this,
-            UserListViewModelFactory (app.usersUseCase)
-        ).get(UserListViewModel::class.java)
         viewModel.getData().observe(requireActivity()) { state
             ->
             render(state)
@@ -71,6 +84,11 @@ class UsersListFragment : Fragment() {
                 getUsers()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(USERS_LIST_VIEW_MODEL_ID, viewModel.id)
     }
 
     private fun render(state: AppState?) {

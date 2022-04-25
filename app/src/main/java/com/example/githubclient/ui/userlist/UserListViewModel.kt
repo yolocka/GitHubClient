@@ -7,13 +7,14 @@ import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.domain.UsersUseCase
 import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.utils.ViewModelStore
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class UserListViewModel(
-    private val usersUseCase: UsersUseCase
-) : ViewModel(), UserListContract.ViewModel {
+    private val usersUseCase: UsersUseCase, override val id: String
+) : ViewModel(), UserListContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()

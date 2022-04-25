@@ -14,6 +14,7 @@ import com.example.githubclient.data.web.UserRemoteRepoImpl
 import com.example.githubclient.domain.UserRemoteRepo
 import com.example.githubclient.domain.UserRepo
 import com.example.githubclient.domain.UsersUseCase
+import com.example.githubclient.utils.ViewModelStore
 import java.lang.Exception
 
 class App : Application() {
@@ -29,6 +30,8 @@ class App : Application() {
     val usersUseCase: UsersUseCase by lazy {
         UsersUseCaseImpl(app.usersRepo, Handler(Looper.getMainLooper()), remoteRepo)
     }
+
+    val viewModelStore by lazy { ViewModelStore() }
 }
 
 val Context.app: App
