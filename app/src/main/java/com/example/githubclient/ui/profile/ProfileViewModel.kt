@@ -4,14 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.domain.entities.RepoDTO
+import com.example.githubclient.data.entities.RepoEntity
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.ui.MainActivity
+import com.example.githubclient.utils.ViewModelStore
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class ProfileViewModel(
-    private val usersUseCase: UsersUseCase
-) : ViewModel(), ProfileContract.ViewModel {
+    private val usersUseCase: UsersUseCase, override val id: String
+) : ViewModel(), ProfileContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -31,7 +33,7 @@ class ProfileViewModel(
             if (result.isNotEmpty()) {
                 liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
             } else {
-                liveDataToObserve.value = AppState.Error(ProfileActivity.ERR_EMPTY_DATA)
+                liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
             } }
     }
 
@@ -42,15 +44,23 @@ class ProfileViewModel(
                 .observeUsersRepos(login)
                 .subscribeBy {
                     if (it.isNotEmpty()) {
-                        liveDataToObserve.postValue(AppState.AdditionalDataSuccess(it))
+                        liveDataToObserve.postValue(AppState.AdditionalDataSuccess(
+                            it.map { repoDto ->
+                                RepoEntity (
+                                    id = repoDto.id,
+                                    name = repoDto.name,
+                                    userId = repoDto.userId
+                                )
+                            }
+                        ))
                     } else {
-                        liveDataToObserve.value = AppState.Error(ProfileActivity.ERR_EMPTY_DATA)
+                        liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
                     }
                 }
         )
     }
 
-    override fun addRepoToLocalRepo(repo: RepoDTO) {
+    override fun addRepoToLocalRepo(repo: RepoEntity) {
         TODO("Not yet implemented")
     }
 

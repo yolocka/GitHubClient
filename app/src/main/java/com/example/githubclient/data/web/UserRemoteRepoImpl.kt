@@ -1,8 +1,8 @@
-package com.example.githubclient.data.remoteRepo
+package com.example.githubclient.data.web
 
+import com.example.githubclient.data.web.entities.RepoDto
+import com.example.githubclient.data.web.entities.UserDto
 import com.example.githubclient.domain.UserRemoteRepo
-import com.example.githubclient.domain.entities.UserDTO
-import com.example.githubclient.domain.entities.RepoDTO
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -18,11 +18,11 @@ class UserRemoteRepoImpl : UserRemoteRepo{
     private val reposApi: GitHubReposApi = retrofit.create(GitHubReposApi::class.java)
     private val usersApi: GitHubUsersApi = retrofit.create(GitHubUsersApi::class.java)
 
-    override fun observeUsersRepos(login: String): Single<List<RepoDTO>> {
+    override fun observeUsersRepos(login: String): Single<List<RepoDto>> {
         return reposApi.listRepos(login)
     }
 
-    override fun observeUsersList(): Single<List<UserDTO>> {
+    override fun observeUsersList(): Single<List<UserDto>> {
         return usersApi.listUsers()
     }
 }

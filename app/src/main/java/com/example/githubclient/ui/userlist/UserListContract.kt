@@ -1,13 +1,12 @@
 package com.example.githubclient.ui.userlist
 
-import com.example.githubclient.domain.entities.RepoDTO
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.UserEntity
 
 class UserListContract {
 
     interface ViewModel {
         fun getUsers()
-        fun updateData(userProfile: UserDTO)
+        fun updateData(userProfile: UserEntity)
         fun getUsersFromRemoteSource(isItFirstTime: Boolean)
     }
 }

@@ -1,12 +1,12 @@
-package com.example.githubclient.data.localRepo
+package com.example.githubclient.data.db
 
 import androidx.room.*
-import com.example.githubclient.data.entities.RepositoriesEntity
-import com.example.githubclient.data.entities.UserProfileEntity
+import com.example.githubclient.data.db.entities.RepositoriesEntity
+import com.example.githubclient.data.db.entities.UserProfileEntity
 
 @Dao
 interface UsersDAO {
-    @Query("SELECT * FROM UserEntity ORDER BY id")
+    @Query("SELECT * FROM UserEntity ORDER BY userName")
     fun getAllUsers(): List<UserProfileEntity>
 
     @Query("SELECT * FROM RepositoriesEntity WHERE userId=:userId")

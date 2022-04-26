@@ -7,12 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubclient.R
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.UserEntity
 
-class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>(){
+class UserListAdapter(
+    private val itemClickCallback: (UserEntity) -> Unit
+) : RecyclerView.Adapter<UserListAdapter.MainViewHolder>(){
 
-    private var users: List<UserDTO> = listOf()
-    var listener: OnItemClick? = null
+    private var users: List<UserEntity> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         return MainViewHolder(
@@ -21,12 +22,12 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.bind(users[position])
+        holder.bind(users[position], itemClickCallback)
     }
 
     override fun getItemCount(): Int = users.size
 
-    fun setUsers(data: List<UserDTO>) {
+    fun setUsers(data: List<UserEntity>) {
         val mainDiffUtilCallback = UserDiffUtilCallback(users, data)
         val productDiffResult = DiffUtil.calculateDiff(mainDiffUtilCallback)
         users = data
@@ -35,17 +36,14 @@ class UserListAdapter() : RecyclerView.Adapter<UserListAdapter.MainViewHolder>()
 
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: UserDTO) {
+        fun bind(user: UserEntity, listener: (UserEntity) -> Unit) {
             itemView.apply {
                 findViewById<TextView>(R.id.user_item_text_view).text = user.login
                 setOnClickListener{
-                    listener?.onClick(user)
+                    //listener?.onClick(user)
+                    listener.invoke(user)
                 }
             }
         }
-    }
-
-    fun interface OnItemClick {
-        fun onClick(user: UserDTO)
     }
 }

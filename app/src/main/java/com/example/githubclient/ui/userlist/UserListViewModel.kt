@@ -3,17 +3,18 @@ package com.example.githubclient.ui.userlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.domain.entities.RepoDTO
-import com.example.githubclient.domain.entities.UserDTO
+import com.example.githubclient.data.entities.UserEntity
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.utils.ViewModelStore
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class UserListViewModel(
-    private val usersUseCase: UsersUseCase
-) : ViewModel(), UserListContract.ViewModel {
+    private val usersUseCase: UsersUseCase, override val id: String
+) : ViewModel(), UserListContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -30,7 +31,7 @@ class UserListViewModel(
             } }
     }
 
-    override fun updateData(userProfile: UserDTO) {
+    override fun updateData(userProfile: UserEntity) {
         liveDataToObserve.value = AppState.Loading
         usersUseCase.addUser(userProfile) { result ->
             if (!result) {
@@ -47,7 +48,13 @@ class UserListViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     it.forEach { user ->
-                        updateData(user)
+                        updateData(
+                            UserEntity(
+                                id = user.id,
+                                login = user.login,
+                                avatar_url = user.avatar_url
+                            )
+                        )
                     }
                     if (isItFirstTime) {
                         liveDataToObserve.postValue(AppState.Success(it))

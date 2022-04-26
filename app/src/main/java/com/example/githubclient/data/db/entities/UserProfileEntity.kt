@@ -1,4 +1,4 @@
-package com.example.githubclient.data.entities
+package com.example.githubclient.data.db.entities
 
 import androidx.room.Entity
 import androidx.room.Index
