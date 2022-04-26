@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubclient.ui.MainActivity
-import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.RepositoryUseCase
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.utils.ViewModelStore
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class UserListViewModel(
-    private val usersUseCase: UsersUseCase, override val id: String
+    private val repositoryUseCase: RepositoryUseCase, override val id: String
 ) : ViewModel(), UserListContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
@@ -23,7 +23,7 @@ class UserListViewModel(
 
     override fun getUsers() {
         liveDataToObserve.value = AppState.Loading
-        usersUseCase.getUsers { result ->
+        repositoryUseCase.getUsers { result ->
             if (result.isNotEmpty()) {
                 liveDataToObserve.postValue(AppState.Success(result))
             } else {
@@ -33,7 +33,7 @@ class UserListViewModel(
 
     override fun updateData(userProfile: UserEntity) {
         liveDataToObserve.value = AppState.Loading
-        usersUseCase.addUser(userProfile) { result ->
+        repositoryUseCase.addUser(userProfile) { result ->
             if (!result) {
                 liveDataToObserve.value = AppState.Error(MainActivity.ERR_UPDATE_DATA)
             }
@@ -43,7 +43,7 @@ class UserListViewModel(
     override fun getUsersFromRemoteSource(isItFirstTime: Boolean) {
         liveDataToObserve.value = AppState.Loading
         compositeDisposable.add(
-            usersUseCase
+            repositoryUseCase
                 .getUsersFromRemoteSource()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {

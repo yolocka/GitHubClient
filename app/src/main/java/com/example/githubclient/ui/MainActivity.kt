@@ -3,7 +3,7 @@ package com.example.githubclient.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.githubclient.databinding.ActivityMainBinding
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.ui.profile.ProfileFragment
 import com.example.githubclient.ui.userlist.UsersListFragment
 

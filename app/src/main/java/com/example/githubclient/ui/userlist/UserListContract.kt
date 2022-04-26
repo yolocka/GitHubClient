@@ -1,6 +1,6 @@
 package com.example.githubclient.ui.userlist
 
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.UserEntity
 
 class UserListContract {
 

@@ -1,4 +1,4 @@
-package com.example.githubclient.data.entities
+package com.example.githubclient.domain.entities
 
 data class UserEntity(
     val id: Long = 0,

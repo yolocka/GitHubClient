@@ -3,8 +3,8 @@ package com.example.githubclient.ui.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.domain.RepositoryUseCase
+import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.utils.ViewModelStore
@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class ProfileViewModel(
-    private val usersUseCase: UsersUseCase, override val id: String
+    private val repositoryUseCase: RepositoryUseCase, override val id: String
 ) : ViewModel(), ProfileContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
@@ -22,14 +22,14 @@ class ProfileViewModel(
 
     override fun getUserData(id: Long) {
         liveDataToObserve.value = AppState.Loading
-        usersUseCase.getOneUser(id) { result ->
+        repositoryUseCase.getOneUser(id) { result ->
             liveDataToObserve.postValue(AppState.Success(result))
             //getRepoList(id)
         }
     }
 
     override fun getRepoList(id: Long) {
-        usersUseCase.getRepositories(id) { result ->
+        repositoryUseCase.getRepositories(id) { result ->
             if (result.isNotEmpty()) {
                 liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
             } else {
@@ -40,7 +40,7 @@ class ProfileViewModel(
     override fun observeUsersRepo(login: String) {
         liveDataToObserve.value = AppState.Loading
         compositeDisposable.add(
-            usersUseCase
+            repositoryUseCase
                 .observeUsersRepos(login)
                 .subscribeBy {
                     if (it.isNotEmpty()) {

@@ -1,7 +1,7 @@
 package com.example.githubclient.ui.userlist
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.UserEntity
 
 class UserDiffUtilCallback(private val oldList: List<UserEntity>, private val newList: List<UserEntity>): DiffUtil.Callback() {
     override fun getOldListSize(): Int {

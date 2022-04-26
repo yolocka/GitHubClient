@@ -14,7 +14,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.githubclient.R
 import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.app
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
 import java.util.*
@@ -54,7 +54,7 @@ class UsersListFragment : Fragment() {
             val id = UUID.randomUUID().toString()
             viewModel = ViewModelProvider(
                 this,
-                UserListViewModelFactory (app.usersUseCase, id)
+                UserListViewModelFactory (app.repositoryUseCase, id)
             ).get(UserListViewModel::class.java)
             app.viewModelStore.saveViewModel(viewModel)
         }

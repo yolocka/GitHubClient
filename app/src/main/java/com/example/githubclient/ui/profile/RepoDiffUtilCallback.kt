@@ -1,7 +1,7 @@
 package com.example.githubclient.ui.profile
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.domain.entities.RepoEntity
 
 class RepoDiffUtilCallback (private val oldList: List<RepoEntity>, private val newList: List<RepoEntity>): DiffUtil.Callback() {
     override fun getOldListSize(): Int {

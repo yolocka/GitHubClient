@@ -12,13 +12,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.example.githubclient.R
 import com.example.githubclient.app
-import com.example.githubclient.data.entities.RepoEntity
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.RepoEntity
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.databinding.FragmentProfileBinding
 import com.example.githubclient.ui.AppState
-import com.example.githubclient.ui.userlist.UserListViewModel
-import com.example.githubclient.ui.userlist.UserListViewModelFactory
-import com.example.githubclient.ui.userlist.UsersListFragment
 import java.util.*
 
 
@@ -54,7 +51,7 @@ class ProfileFragment : Fragment() {
             val id = UUID.randomUUID().toString()
             viewModel = ViewModelProvider(
                 this,
-                ProfileViewModelFactory (app.usersUseCase, id)
+                ProfileViewModelFactory (app.repositoryUseCase, id)
             ).get(ProfileViewModel::class.java)
             app.viewModelStore.saveViewModel(viewModel)
         }
