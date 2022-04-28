@@ -7,16 +7,18 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.githubclient.R
 import com.example.githubclient.ui.MainActivity
-import com.example.githubclient.app
 import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.databinding.FragmentUsersListBinding
 import com.example.githubclient.ui.AppState
+import com.example.githubclient.utils.ViewModelStore
+import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 import java.util.*
 
 class UsersListFragment : Fragment() {
@@ -24,6 +26,7 @@ class UsersListFragment : Fragment() {
     private val binding by viewBinding(FragmentUsersListBinding::class.java)
     private val userListAdapter = UserListAdapter{controller.openUserProfileScreen(it)}
     private lateinit var viewModel: UserListViewModel
+    private val viewModelStore: ViewModelStore by inject()
     private val controller by lazy { activity as Controller }
     private val sharedPref: SharedPreferences by lazy {
         requireActivity().getSharedPreferences(MainActivity.SHAR_PREF_NAME, Context.MODE_PRIVATE)
@@ -49,14 +52,10 @@ class UsersListFragment : Fragment() {
 
         if (savedInstanceState != null) {
             val id = savedInstanceState.getString(USERS_LIST_VIEW_MODEL_ID)!!
-            viewModel = app.viewModelStore.getViewModel(id) as UserListViewModel
+            viewModel = viewModelStore.getViewModel(id) as UserListViewModel
         } else {
-            val id = UUID.randomUUID().toString()
-            viewModel = ViewModelProvider(
-                this,
-                UserListViewModelFactory (app.repositoryUseCase, id)
-            ).get(UserListViewModel::class.java)
-            app.viewModelStore.saveViewModel(viewModel)
+            viewModel = get(named("users_list_view_model"))
+            viewModelStore.saveViewModel(viewModel)
         }
 
         binding.usersListRecyclerView.apply {
