@@ -11,6 +11,7 @@ import com.example.githubclient.utils.ViewModelStore
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class UserListViewModel(
     private val repositoryUseCase: RepositoryUseCase, override val id: String
@@ -23,12 +24,19 @@ class UserListViewModel(
 
     override fun getUsers() {
         liveDataToObserve.value = AppState.Loading
-        repositoryUseCase.getUsers { result ->
-            if (result.isNotEmpty()) {
-                liveDataToObserve.postValue(AppState.Success(result))
-            } else {
-                liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
-            } }
+        compositeDisposable.add(
+            repositoryUseCase
+                .getUsers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy{ result ->
+                    if (result.isNotEmpty()) {
+                        liveDataToObserve.postValue(AppState.Success(result))
+                    } else {
+                        liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
+                    }
+                }
+        )
     }
 
     override fun updateData(userProfile: UserEntity) {

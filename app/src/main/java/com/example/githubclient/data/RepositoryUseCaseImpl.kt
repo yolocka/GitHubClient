@@ -16,13 +16,8 @@ class RepositoryUseCaseImpl(
     private val remoteRepository: RemoteRepository
 ) : RepositoryUseCase {
 
-    override fun getUsers(callback: (List<UserEntity>) -> Unit) {
-        Thread {
-            val result = repo.getAllUsers()
-            uiHandler.post {
-                callback(result)
-            }
-        }.start()
+    override fun getUsers() : Single<List<UserEntity>> {
+        return repo.getAllUsers()
     }
 
     override fun getOneUser(id: Long, callback: (UserEntity) -> Unit) {
@@ -43,13 +38,8 @@ class RepositoryUseCaseImpl(
         }.start()
     }
 
-    override fun getRepositories(id: Long, callback: (List<RepoEntity>) -> Unit) {
-        Thread {
-            val result = repo.getRepositoriesList(id)
-            uiHandler.post {
-                callback(result)
-            }
-        }.start()
+    override fun getRepositories(id: Long) : Single<List<RepoEntity>> {
+        return repo.getRepositoriesList(id)
     }
 
     override fun addRepo(repository: RepoEntity, callback: (Boolean) -> Unit) {

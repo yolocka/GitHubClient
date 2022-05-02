@@ -8,8 +8,10 @@ import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.ui.MainActivity
 import com.example.githubclient.utils.ViewModelStore
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class ProfileViewModel(
     private val repositoryUseCase: RepositoryUseCase, override val id: String
@@ -29,12 +31,20 @@ class ProfileViewModel(
     }
 
     override fun getRepoList(id: Long) {
-        repositoryUseCase.getRepositories(id) { result ->
-            if (result.isNotEmpty()) {
-                liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
-            } else {
-                liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
-            } }
+        liveDataToObserve.value = AppState.Loading
+        compositeDisposable.add(
+            repositoryUseCase
+                .getRepositories(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { result ->
+                    if (result.isNotEmpty()) {
+                        liveDataToObserve.postValue(AppState.AdditionalDataSuccess(result))
+                    } else {
+                        liveDataToObserve.value = AppState.Error(MainActivity.ERR_EMPTY_DATA)
+                    }
+                }
+        )
     }
 
     override fun observeUsersRepo(login: String) {

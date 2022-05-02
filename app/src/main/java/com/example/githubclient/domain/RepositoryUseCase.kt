@@ -7,10 +7,10 @@ import com.example.githubclient.domain.entities.UserEntity
 import io.reactivex.rxjava3.core.Single
 
 interface RepositoryUseCase {
-    fun getUsers(callback: (List<UserEntity>) -> Unit)
+    fun getUsers() : Single<List<UserEntity>>
     fun getOneUser(id: Long, callback: (UserEntity) -> Unit)
     fun addUser(user: UserEntity, callback: (Boolean) -> Unit)
-    fun getRepositories(id: Long, callback: (List<RepoEntity>) -> Unit)
+    fun getRepositories(id: Long) : Single<List<RepoEntity>>
     fun addRepo(repository: RepoEntity, callback: (Boolean) -> Unit)
     fun observeUsersRepos(login: String) : Single<List<RepoDto>>
     fun getUsersFromRemoteSource() : Single<List<UserDto>>

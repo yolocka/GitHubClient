@@ -5,16 +5,19 @@ import com.example.githubclient.data.db.entities.UserProfileEntity
 import com.example.githubclient.domain.LocalRepository
 import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.domain.entities.UserEntity
+import io.reactivex.rxjava3.core.Single
 
 class LocalRepositoryImpl(private val dao: UsersDAO) : LocalRepository {
-    override fun getAllUsers(): List<UserEntity> {
+    override fun getAllUsers(): Single<List<UserEntity>> {
         return dao.getAllUsers()
-            .map { userEntity ->
-                UserEntity(
-                    id = userEntity.gitHubId,
-                    login = userEntity.userName,
-                    avatar_url = userEntity.userPhoto
-                )
+            .map {
+                it.map { userEntity ->
+                    UserEntity(
+                        id = userEntity.gitHubId,
+                        login = userEntity.userName,
+                        avatar_url = userEntity.userPhoto
+                    )
+                }
             }
     }
 
@@ -50,14 +53,16 @@ class LocalRepositoryImpl(private val dao: UsersDAO) : LocalRepository {
         dao.deleteAll()
     }
 
-    override fun getRepositoriesList(id: Long): List<RepoEntity> {
+    override fun getRepositoriesList(id: Long): Single<List<RepoEntity>> {
         return dao.getAllRepositories(id)
-            .map { repoEntity ->
-                RepoEntity(
-                    id = repoEntity.id,
-                    name = repoEntity.name,
-                    userId = repoEntity.userId
-                )
+            .map {
+                it.map { repoEntity ->
+                    RepoEntity(
+                        id = repoEntity.id,
+                        name = repoEntity.name,
+                        userId = repoEntity.userId
+                    )
+                }
             }
     }
 

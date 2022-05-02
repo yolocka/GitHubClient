@@ -2,10 +2,11 @@ package com.example.githubclient.domain
 
 import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.domain.entities.UserEntity
+import io.reactivex.rxjava3.core.Single
 
 interface LocalRepository {
 
-    fun getAllUsers(): List<UserEntity>
+    fun getAllUsers(): Single<List<UserEntity>>
 
     fun getUser(id: Long): UserEntity
 
@@ -17,7 +18,7 @@ interface LocalRepository {
 
     fun deleteAllUsers()
 
-    fun getRepositoriesList(id: Long): List<RepoEntity>
+    fun getRepositoriesList(id: Long): Single<List<RepoEntity>>
 
     fun addRepo(repo: RepoEntity) : Boolean
 }
