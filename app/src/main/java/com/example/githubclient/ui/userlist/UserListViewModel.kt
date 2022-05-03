@@ -14,7 +14,9 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class UserListViewModel(
-    private val repositoryUseCase: RepositoryUseCase, override val id: String
+    private val repositoryUseCase: RepositoryUseCase,
+    private val remoteRepositoryUseCase: RepositoryUseCase,
+    override val id: String
 ) : ViewModel(), UserListContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
@@ -51,7 +53,7 @@ class UserListViewModel(
     override fun getUsersFromRemoteSource(isItFirstTime: Boolean) {
         liveDataToObserve.value = AppState.Loading
         compositeDisposable.add(
-            repositoryUseCase
+            remoteRepositoryUseCase
                 .getUsersFromRemoteSource()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {

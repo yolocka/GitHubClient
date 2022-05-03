@@ -14,7 +14,9 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class ProfileViewModel(
-    private val repositoryUseCase: RepositoryUseCase, override val id: String
+    private val repositoryUseCase: RepositoryUseCase,
+    private val remoteRepositoryUseCase: RepositoryUseCase,
+    override val id: String
 ) : ViewModel(), ProfileContract.ViewModel, ViewModelStore.BaseViewModel {
 
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()
@@ -26,7 +28,6 @@ class ProfileViewModel(
         liveDataToObserve.value = AppState.Loading
         repositoryUseCase.getOneUser(id) { result ->
             liveDataToObserve.postValue(AppState.Success(result))
-            //getRepoList(id)
         }
     }
 
@@ -50,8 +51,9 @@ class ProfileViewModel(
     override fun observeUsersRepo(login: String) {
         liveDataToObserve.value = AppState.Loading
         compositeDisposable.add(
-            repositoryUseCase
+            remoteRepositoryUseCase
                 .observeUsersRepos(login)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     if (it.isNotEmpty()) {
                         liveDataToObserve.postValue(AppState.AdditionalDataSuccess(

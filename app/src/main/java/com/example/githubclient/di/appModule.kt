@@ -2,15 +2,12 @@ package com.example.githubclient.di
 
 import android.os.Handler
 import android.os.Looper
-import com.example.githubclient.data.RepositoryUseCaseImpl
 import com.example.githubclient.data.db.LocalRepositoryImpl
 import com.example.githubclient.data.db.UsersDataBase
 import com.example.githubclient.data.web.GitHubReposApi
 import com.example.githubclient.data.web.GitHubUsersApi
 import com.example.githubclient.data.web.RemoteRepositoryImpl
 import com.example.githubclient.domain.GitHubApi
-import com.example.githubclient.domain.LocalRepository
-import com.example.githubclient.domain.RemoteRepository
 import com.example.githubclient.domain.RepositoryUseCase
 import com.example.githubclient.ui.profile.ProfileViewModel
 import com.example.githubclient.ui.userlist.UserListViewModel
@@ -27,8 +24,9 @@ import java.util.*
 
 const val USE_CASE_FOR_REPOS: String = "repos_use_case"
 const val USE_CASE_FOR_USERS: String = "users_use_case"
-const val REPOSITORY_FOR_REPOS: String = "repos_repository"
-const val REPOSITORY_FOR_USERS: String = "users_repository"
+const val REMOTE_REPOSITORY_FOR_REPOS: String = "repos_repository"
+const val REMOTE_REPOSITORY_FOR_USERS: String = "users_repository"
+const val LOCAL_REPOSITORY: String = "local_repo"
 const val API_FOR_REPOS: String = "repos_api"
 const val API_FOR_USERS: String = "users_api"
 const val API_URL_KEY: String = "api_url"
@@ -40,12 +38,15 @@ const val PROFILE_VIEW_MODEL: String = "profile_view_model"
 
 val appModule = module {
 
-    single<LocalRepository> { LocalRepositoryImpl(UsersDataBase.getInstance(androidContext())) }
+    single<RepositoryUseCase>(named(LOCAL_REPOSITORY)) {
+        LocalRepositoryImpl(UsersDataBase.getInstance(androidContext()),
+            Handler(Looper.getMainLooper()))
+    }
 
-    single<RemoteRepository>(named(REPOSITORY_FOR_REPOS)) {
+    single<RepositoryUseCase>(named(REMOTE_REPOSITORY_FOR_REPOS)) {
         RemoteRepositoryImpl(get(named(API_FOR_REPOS)))
     }
-    single<RemoteRepository>(named(REPOSITORY_FOR_USERS)) {
+    single<RepositoryUseCase>(named(REMOTE_REPOSITORY_FOR_USERS)) {
         RemoteRepositoryImpl(get(named(API_FOR_USERS)))
     }
     single <GitHubApi>(named(API_FOR_REPOS)) { get<Retrofit>().create(GitHubReposApi::class.java) }
@@ -59,25 +60,24 @@ val appModule = module {
     }
     single(named(API_URL_KEY)) { API_URL_VALUE }
 
-    single<RepositoryUseCase>(named(USE_CASE_FOR_REPOS)) {
-        RepositoryUseCaseImpl(
-            get(),
-            Handler(Looper.getMainLooper()),
-            get(named(REPOSITORY_FOR_REPOS)))
-    }
-    single<RepositoryUseCase>(named(USE_CASE_FOR_USERS)) {
-        RepositoryUseCaseImpl(
-            get(),
-            Handler(Looper.getMainLooper()),
-            get(named(REPOSITORY_FOR_USERS)))
-    }
-
 
     factory<Converter.Factory> { GsonConverterFactory.create() }
 
     single{ ViewModelStore() }
     single(named(VIEW_MODEL_ID)){ UUID.randomUUID().toString() }
 
-    viewModel(named(USER_LIST_VIEW_MODEL)) { UserListViewModel(get(named(USE_CASE_FOR_USERS)), get(named(VIEW_MODEL_ID))) }
-    viewModel(named(PROFILE_VIEW_MODEL)) { ProfileViewModel(get(named(USE_CASE_FOR_REPOS)), get(named(VIEW_MODEL_ID))) }
+    viewModel(named(USER_LIST_VIEW_MODEL)) {
+        UserListViewModel(
+            get(named(LOCAL_REPOSITORY)),
+            get(named(REMOTE_REPOSITORY_FOR_USERS)),
+            get(named(VIEW_MODEL_ID))
+        )
+    }
+    viewModel(named(PROFILE_VIEW_MODEL)) {
+        ProfileViewModel(
+            get(named(LOCAL_REPOSITORY)),
+            get(named(REMOTE_REPOSITORY_FOR_REPOS)),
+            get(named(VIEW_MODEL_ID))
+        )
+    }
 }
