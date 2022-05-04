@@ -1,9 +1,9 @@
 package com.example.githubclient.domain
 
-import com.example.githubclient.data.entities.RepoEntity
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.RepoEntity
+import com.example.githubclient.domain.entities.UserEntity
 
-interface UserRepo {
+interface LocalRepository {
 
     fun getAllUsers(): List<UserEntity>
 

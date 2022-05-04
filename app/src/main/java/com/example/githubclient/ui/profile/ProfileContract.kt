@@ -1,6 +1,6 @@
 package com.example.githubclient.ui.profile
 
-import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.domain.entities.RepoEntity
 
 
 class ProfileContract {

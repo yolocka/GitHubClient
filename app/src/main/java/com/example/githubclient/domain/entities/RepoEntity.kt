@@ -1,4 +1,4 @@
-package com.example.githubclient.data.entities
+package com.example.githubclient.domain.entities
 
 data class RepoEntity(
     val id: Int = 0,

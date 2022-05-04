@@ -5,21 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.example.githubclient.R
-import com.example.githubclient.app
-import com.example.githubclient.data.entities.RepoEntity
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.RepoEntity
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.databinding.FragmentProfileBinding
 import com.example.githubclient.ui.AppState
-import com.example.githubclient.ui.userlist.UserListViewModel
-import com.example.githubclient.ui.userlist.UserListViewModelFactory
-import com.example.githubclient.ui.userlist.UsersListFragment
-import java.util.*
+import com.example.githubclient.utils.ViewModelStore
+import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 
 class ProfileFragment : Fragment() {
@@ -27,6 +25,7 @@ class ProfileFragment : Fragment() {
     private val binding by viewBinding(FragmentProfileBinding::class.java)
     private val repoListAdapter = RepoListAdapter()
     private lateinit var viewModel: ProfileViewModel
+    private val viewModelStore: ViewModelStore by inject()
 
     companion object{
         private const val USER_ID_ARGS_KEY = "USER_ID_ARGS_KEY"
@@ -49,14 +48,10 @@ class ProfileFragment : Fragment() {
 
         if (savedInstanceState != null) {
             val id = savedInstanceState.getString(PROFILE_VIEW_MODEL_ID)!!
-            viewModel = app.viewModelStore.getViewModel(id) as ProfileViewModel
+            viewModel = viewModelStore.getViewModel(id) as ProfileViewModel
         } else {
-            val id = UUID.randomUUID().toString()
-            viewModel = ViewModelProvider(
-                this,
-                ProfileViewModelFactory (app.usersUseCase, id)
-            ).get(ProfileViewModel::class.java)
-            app.viewModelStore.saveViewModel(viewModel)
+            viewModel = get(named("profile_view_model"))
+            viewModelStore.saveViewModel(viewModel)
         }
 
         binding.repoListRecyclerView.apply{

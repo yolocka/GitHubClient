@@ -2,19 +2,19 @@ package com.example.githubclient.data
 
 import android.os.Handler
 import com.example.githubclient.data.web.entities.RepoDto
-import com.example.githubclient.domain.UserRemoteRepo
-import com.example.githubclient.domain.UserRepo
-import com.example.githubclient.domain.UsersUseCase
-import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.domain.RemoteRepository
+import com.example.githubclient.domain.LocalRepository
+import com.example.githubclient.domain.RepositoryUseCase
+import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.data.web.entities.UserDto
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.entities.UserEntity
 import io.reactivex.rxjava3.core.Single
 
-class UsersUseCaseImpl(
-    private val repo: UserRepo,
+class RepositoryUseCaseImpl(
+    private val repo: LocalRepository,
     private val uiHandler: Handler,
-    private val remoteRepo: UserRemoteRepo
-) : UsersUseCase {
+    private val remoteRepository: RemoteRepository
+) : RepositoryUseCase {
 
     override fun getUsers(callback: (List<UserEntity>) -> Unit) {
         Thread {
@@ -62,10 +62,10 @@ class UsersUseCaseImpl(
     }
 
     override fun observeUsersRepos(login: String): Single<List<RepoDto>> {
-        return remoteRepo.observeUsersRepos(login)
+        return remoteRepository.observeUsersRepos(login)
     }
 
     override fun getUsersFromRemoteSource(): Single<List<UserDto>> {
-        return remoteRepo.observeUsersList()
+        return remoteRepository.observeUsersList()
     }
 }

@@ -2,11 +2,11 @@ package com.example.githubclient.data.db
 
 import com.example.githubclient.data.db.entities.RepositoriesEntity
 import com.example.githubclient.data.db.entities.UserProfileEntity
-import com.example.githubclient.domain.UserRepo
-import com.example.githubclient.data.entities.RepoEntity
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.LocalRepository
+import com.example.githubclient.domain.entities.RepoEntity
+import com.example.githubclient.domain.entities.UserEntity
 
-class UserRepoImpl(private val dao: UsersDAO) : UserRepo {
+class LocalRepositoryImpl(private val dao: UsersDAO) : LocalRepository {
     override fun getAllUsers(): List<UserEntity> {
         return dao.getAllUsers()
             .map { userEntity ->

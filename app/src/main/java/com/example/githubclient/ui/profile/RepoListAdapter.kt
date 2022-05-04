@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubclient.R
-import com.example.githubclient.data.entities.RepoEntity
+import com.example.githubclient.domain.entities.RepoEntity
 
 class RepoListAdapter() : RecyclerView.Adapter<RepoListAdapter.MainViewHolder>() {
 

@@ -3,7 +3,8 @@ package com.example.githubclient.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.githubclient.databinding.ActivityMainBinding
-import com.example.githubclient.data.entities.UserEntity
+import com.example.githubclient.domain.RepositoryUseCase
+import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.ui.profile.ProfileFragment
 import com.example.githubclient.ui.userlist.UsersListFragment
 
@@ -31,11 +32,6 @@ class MainActivity : AppCompatActivity(), UsersListFragment.Controller {
     }
 
     override fun openUserProfileScreen(user: UserEntity) {
-/*
-        val intent = Intent(this, ProfileActivity::class.java)
-        intent.putExtra("USER_ID", user.id)
-        startActivity(intent)
-*/
 
         supportFragmentManager
             .beginTransaction()
