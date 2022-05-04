@@ -51,8 +51,9 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.4.2'
     //Coil
     implementation 'io.coil-kt:coil:1.4.0'
-    //Koin
-    implementation "io.insert-koin:koin-android:3.1.6"
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.41'
+    kapt 'com.google.dagger:dagger-compiler:2.41'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
