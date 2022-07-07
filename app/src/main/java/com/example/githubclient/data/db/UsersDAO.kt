@@ -3,14 +3,15 @@ package com.example.githubclient.data.db
 import androidx.room.*
 import com.example.githubclient.data.db.entities.RepositoriesEntity
 import com.example.githubclient.data.db.entities.UserProfileEntity
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 interface UsersDAO {
     @Query("SELECT * FROM UserEntity ORDER BY userName")
-    fun getAllUsers(): List<UserProfileEntity>
+    fun getAllUsers(): Single<List<UserProfileEntity>>
 
     @Query("SELECT * FROM RepositoriesEntity WHERE userId=:userId")
-    fun getAllRepositories(userId: Long): List<RepositoriesEntity>
+    fun getAllRepositories(userId: Long): Single<List<RepositoriesEntity>>
 
     @Query("SELECT * FROM UserEntity WHERE gitHubId=:userId")
     fun getUser(userId: Long): UserProfileEntity

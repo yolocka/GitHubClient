@@ -5,19 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.example.githubclient.R
+import com.example.githubclient.app
 import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.domain.entities.UserEntity
 import com.example.githubclient.databinding.FragmentProfileBinding
+import com.example.githubclient.di.AppDependenciesModule
+import com.example.githubclient.domain.RepositoryUseCase
 import com.example.githubclient.ui.AppState
 import com.example.githubclient.utils.ViewModelStore
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
 
 
 class ProfileFragment : Fragment() {
@@ -25,7 +29,14 @@ class ProfileFragment : Fragment() {
     private val binding by viewBinding(FragmentProfileBinding::class.java)
     private val repoListAdapter = RepoListAdapter()
     private lateinit var viewModel: ProfileViewModel
-    private val viewModelStore: ViewModelStore by inject()
+    @Inject
+    lateinit var viewModelStore: ViewModelStore
+    @Inject
+    @Named(AppDependenciesModule.LOCAL_REPOSITORY)
+    lateinit var localRepo: RepositoryUseCase
+    @Inject
+    @Named(AppDependenciesModule.REMOTE_REPOSITORY_FOR_REPOS)
+    lateinit var remoteReposRepo: RepositoryUseCase
 
     companion object{
         private const val USER_ID_ARGS_KEY = "USER_ID_ARGS_KEY"
@@ -46,11 +57,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        app.appDependenciesComponent.inject(this)
+
         if (savedInstanceState != null) {
             val id = savedInstanceState.getString(PROFILE_VIEW_MODEL_ID)!!
             viewModel = viewModelStore.getViewModel(id) as ProfileViewModel
         } else {
-            viewModel = get(named("profile_view_model"))
+            val id = UUID.randomUUID().toString()
+            viewModel = ViewModelProvider(
+                this,
+                ProfileViewModelFactory (localRepo, remoteReposRepo, id)
+            ).get(ProfileViewModel::class.java)
             viewModelStore.saveViewModel(viewModel)
         }
 

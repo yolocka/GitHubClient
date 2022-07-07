@@ -1,74 +1,96 @@
 package com.example.githubclient.data.db
 
+import android.os.Handler
 import com.example.githubclient.data.db.entities.RepositoriesEntity
 import com.example.githubclient.data.db.entities.UserProfileEntity
-import com.example.githubclient.domain.LocalRepository
+import com.example.githubclient.data.web.entities.RepoDto
+import com.example.githubclient.data.web.entities.UserDto
+import com.example.githubclient.domain.RepositoryUseCase
 import com.example.githubclient.domain.entities.RepoEntity
 import com.example.githubclient.domain.entities.UserEntity
+import io.reactivex.rxjava3.core.Single
 
-class LocalRepositoryImpl(private val dao: UsersDAO) : LocalRepository {
-    override fun getAllUsers(): List<UserEntity> {
+class LocalRepositoryImpl(
+    private val dao: UsersDAO,
+    private val uiHandler: Handler
+    ) : RepositoryUseCase {
+
+    override fun getUsers(): Single<List<UserEntity>> {
         return dao.getAllUsers()
-            .map { userEntity ->
-                UserEntity(
-                    id = userEntity.gitHubId,
-                    login = userEntity.userName,
-                    avatar_url = userEntity.userPhoto
-                )
+            .map {
+                it.map { userEntity ->
+                    UserEntity(
+                        id = userEntity.gitHubId,
+                        login = userEntity.userName,
+                        avatar_url = userEntity.userPhoto
+                    )
+                }
             }
     }
 
-    override fun getUser(id: Long): UserEntity {
-        return UserEntity(
-            id = dao.getUser(id).gitHubId,
-            login = dao.getUser(id).userName,
-            avatar_url = dao.getUser(id).userPhoto
-        )
-    }
-
-    override fun saveUser(user: UserEntity) : Boolean {
-        dao.insertUser(
-            UserProfileEntity(
-                id = 0,
-                gitHubId = user.id,
-                userName = user.login,
-                userPhoto = user.avatar_url
+    override fun getOneUser(id: Long, callback: (UserEntity) -> Unit) {
+        Thread {
+            val result = UserEntity (
+                id = dao.getUser(id).gitHubId,
+                login = dao.getUser(id).userName,
+                avatar_url = dao.getUser(id).userPhoto
             )
-        )
-        return true
+            uiHandler.post {
+                callback(result)
+            }
+        }.start()
     }
 
-/*    override fun updateUserData(id: Int, user: UserProfile) {
-        TODO("Not yet implemented")
-    }*/
-
-    override fun deleteUser(id: Int) {
-        dao.delete(id)
+    override fun addUser(user: UserEntity, callback: (Boolean) -> Unit) {
+        Thread {
+            dao.insertUser(
+                UserProfileEntity(
+                    id = 0,
+                    gitHubId = user.id,
+                    userName = user.login,
+                    userPhoto = user.avatar_url
+                )
+            )
+            val result = true
+            uiHandler.post {
+                callback(result)
+            }
+        }.start()
     }
 
-    override fun deleteAllUsers() {
-        dao.deleteAll()
-    }
-
-    override fun getRepositoriesList(id: Long): List<RepoEntity> {
+    override fun getRepositories(id: Long): Single<List<RepoEntity>> {
         return dao.getAllRepositories(id)
-            .map { repoEntity ->
-                RepoEntity(
-                    id = repoEntity.id,
-                    name = repoEntity.name,
-                    userId = repoEntity.userId
-                )
+            .map {
+                it.map { repoEntity ->
+                    RepoEntity(
+                        id = repoEntity.id,
+                        name = repoEntity.name,
+                        userId = repoEntity.userId
+                    )
+                }
             }
     }
-
-    override fun addRepo(repo: RepoEntity): Boolean {
-        dao.insertRepo(
-            RepositoriesEntity(
-                id = 0,
-                name = repo.name,
-                userId = repo.userId
+    override fun addRepo(repository: RepoEntity, callback: (Boolean) -> Unit) {
+        Thread {
+            dao.insertRepo(
+                RepositoriesEntity(
+                    id = 0,
+                    name = repository.name,
+                    userId = repository.userId
+                )
             )
-        )
-        return true
+            val result = true
+            uiHandler.post {
+                callback(result)
+            }
+        }.start()
+    }
+
+    override fun observeUsersRepos(login: String): Single<List<RepoDto>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUsersFromRemoteSource(): Single<List<UserDto>> {
+        TODO("Not yet implemented")
     }
 }
